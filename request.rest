@@ -1,0 +1,15 @@
+GET http://localhost:3001/shows 
+
+###
+
+POST http://localhost:3001/show/new HTTP/1.1
+content-type: application/json
+
+{
+"name": "German Open 11",
+"date": "2022-10-31"
+}
+
+###
+
+DELETE http://localhost:3001/show/delete/63374b74f0899f4efe7d3523
