@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Show = require('./models/Show');
+const { json } = require('express');
 
 const app = express();
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August",
@@ -17,23 +18,24 @@ mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
   .catch((err) => console.log(err));
 
 app.get('/shows', async (req, res) => {
+  var obj = {};
+
   const shows = await Show.find();
 
-  var showsSortedByMonth = [];
-
-  for(var i = 0; i < months.length; i++){
-    
-    var dummy = [];
-    
-    for(var y = 0; y < shows.length; y++){
-      var date = shows[y].date;
-      if(date.toLocaleString('default', {month: 'numeric'}) == i){
-        dummy.push(shows[y]);
-      }
+  for(var i = 0;i < shows.length; i++) {
+    var year = String(shows[i].date.toLocaleString('default', {year: 'numeric'}));
+    if(!obj[year]) {
+      obj[year] = [];
     }
-    showsSortedByMonth[i] = dummy;
-  } 
-  res.json(showsSortedByMonth);
+    obj[year].push(shows[i]);
+  }
+
+  res.json(obj);
+});
+
+app.get('/test', async (req, res) => {
+
+
 });
 
 app.post('/show/new', (req, res) => {
